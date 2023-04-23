@@ -1,0 +1,28 @@
+version: "3"
+services:
+  native:
+    build: server/
+    hostname: native
+    expose:
+      - 4001/udp
+    environment:
+      - HOST=native
+      - PORT=4001
+
+  json:
+    build: server/
+    hostname: json
+    expose:
+      - 4002/udp
+    environment:
+      - HOST=json
+      - PORT=4002
+
+
+  client:
+    build: client/
+    hostname: client
+
+    depends_on:
+      - native
+      - json
