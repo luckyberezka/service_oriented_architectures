@@ -2,27 +2,83 @@ version: "3"
 services:
   native:
     build: server/
-    hostname: native
+    hostname: NATIVE
     expose:
       - 4001/udp
     environment:
-      - HOST=native
+      - HOST=NATIVE
       - PORT=4001
 
-  json:
+  xml:
     build: server/
-    hostname: json
+    hostname: XML
     expose:
       - 4002/udp
     environment:
-      - HOST=json
+      - HOST=XML
       - PORT=4002
 
+  json:
+    build: server/
+    hostname: JSON
+    expose:
+      - 4003/udp
+    environment:
+      - HOST=JSON
+      - PORT=4003
+
+  gpb:
+    build: server/
+    hostname: GPB
+    expose:
+      - 4004/udp
+    environment:
+      - HOST=GPB
+      - PORT=4004
+
+  apache:
+    build: server/
+    hostname: APACHE
+    expose:
+      - 4005/udp
+    environment:
+      - HOST=APACHE
+      - PORT=4005
+
+  yaml:
+    build: server/
+    hostname: YAML
+    expose:
+      - 4006/udp
+    environment:
+      - HOST=YAML
+      - PORT=4006
+
+  msgpack:
+    build: server/
+    hostname: MSGPACK
+    expose:
+      - 4007/udp
+    environment:
+      - HOST=MSGPACK
+      - PORT=4007
 
   client:
     build: client/
     hostname: client
-
+    environment:
+      - NATIVE_PORT=4001
+      - XML_PORT=4002
+      - JSON_PORT=4003
+      - GPB_PORT=4004
+      - APACHE_PORT=4005
+      - YAML_PORT=4006
+      - MSGPACK_PORT=4007
     depends_on:
       - native
+      - xml
       - json
+      - gpb
+      - apache
+      - yaml
+      - msgpack
