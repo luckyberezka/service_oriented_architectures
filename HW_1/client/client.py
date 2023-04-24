@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import socket
 import os
+import json
 
 
 FORMAT_NUMBER = 7
 BUFFER_SIZE = 1024
 
 def multiple_request_processing():
-    host = os.environ['MULTICAST_ADDR']
-    port = int(os.environ['PORT'])
+    host = os.environ["MULTICAST_ADDR"]
+    port = int(os.environ["PORT"])
 
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) as s:
         s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
@@ -17,7 +18,8 @@ def multiple_request_processing():
         response_storage = dict()
         while len(response_storage) < FORMAT_NUMBER:
             data, server = s.recvfrom(BUFFER_SIZE)
-            response_storage[data] = data
+            data = json.loads(data.decode())
+            response_storage[data["format"]] = (data["serial_time"], data["deserial_time"])
             print(data)
 
 
@@ -30,6 +32,7 @@ def single_request_processing(query_format):
         s.sendto(str.encode("Get {} timing".format(query_format)), (host, port))
 
         data, server = s.recvfrom(BUFFER_SIZE)
+        data = json.loads(data.decode())
         print(data)
 
 
