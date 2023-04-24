@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 import socket
 import os
+import struct
 
+
+BUFFER_SIZE = 1024
 
 if __name__ == "__main__":
-    HOST = os.environ['HOST']
-    PORT = int(os.environ['PORT'])
+    # loading info
+    host = os.environ['HOST']
+    port = int(os.environ['PORT'])
+    multicast_addr = os.environ['MULTICAST_ADDR']
 
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-        s.bind((HOST, PORT))
+    # socket setting up
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind(('', port))
+        mreq = struct.pack("4sl", socket.inet_aton(multicast_addr), socket.INADDR_ANY)
+        s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+        # main logic
         while True:
-            bytesAddressPair = s.recvfrom(1024)
 
-            message = bytesAddressPair[0]
+            # waiting client ping
+            bytesAddressPair = s.recvfrom(BUFFER_SIZE)
 
-            address = bytesAddressPair[1]
-
-            clientMsg = "Message from Client:{}".format(message)
-            clientIP = "Client IP Address:{}".format(address)
-
-            print(clientMsg)
-            print(clientIP)
-
-            # Sending a reply to client
-
-            s.sendto(str.encode("Hello {} Client".format(HOST)), address)
+            # response
+            data, address = bytesAddressPair
+            s.sendto(str.encode("{} ACK".format(host)), address)
