@@ -13,67 +13,61 @@ services:
     build: server/
     hostname: XML
     expose:
-      - 4002/udp
+      - 4001/udp
     environment:
       - HOST=XML
-      - PORT=4002
+      - PORT=4001
 
   json:
     build: server/
     hostname: JSON
     expose:
-      - 4003/udp
+      - 4001/udp
     environment:
       - HOST=JSON
-      - PORT=4003
+      - PORT=4001
 
   gpb:
     build: server/
     hostname: GPB
     expose:
-      - 4004/udp
+      - 4001/udp
     environment:
       - HOST=GPB
-      - PORT=4004
+      - PORT=4001
 
   apache:
     build: server/
     hostname: APACHE
     expose:
-      - 4005/udp
+      - 4001/udp
     environment:
       - HOST=APACHE
-      - PORT=4005
+      - PORT=4001
 
   yaml:
     build: server/
     hostname: YAML
     expose:
-      - 4006/udp
+      - 4001/udp
     environment:
       - HOST=YAML
-      - PORT=4006
+      - PORT=4001
 
   msgpack:
     build: server/
     hostname: MSGPACK
     expose:
-      - 4007/udp
+      - 4001/udp
     environment:
       - HOST=MSGPACK
-      - PORT=4007
+      - PORT=4001
 
   client:
     build: client/
     hostname: client
     environment:
-      - NATIVE_PORT=4001
-      - XML_PORT=4002
-      - JSON_PORT=4003
-      - GPB_PORT=4004
-      - APACHE_PORT=4005
-      - YAML_PORT=4006
-      - MSGPACK_PORT=4007
+      - PORT=4001
     depends_on:
       - native
       - xml

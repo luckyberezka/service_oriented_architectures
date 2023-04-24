@@ -5,7 +5,7 @@ import os
 
 def query_processing(query_format):
     host = query_format
-    port = int(os.environ['{}_PORT'.format(query_format)])
+    port = int(os.environ['PORT'])
 
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.connect((host, port))

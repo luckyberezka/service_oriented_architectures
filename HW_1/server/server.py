@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 import socket
-import sys
 import os
 
 
 if __name__ == "__main__":
-
     HOST = os.environ['HOST']
     PORT = int(os.environ['PORT'])
 
