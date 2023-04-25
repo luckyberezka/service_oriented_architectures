@@ -73,6 +73,10 @@ services:
   client:
     build: client/
     hostname: client
+    expose:
+      - 2000/udp
+    ports:
+      - "2000:2000/udp"
     environment:
       - MULTICAST_ADDR=224.3.29.71
       - PORT=10000

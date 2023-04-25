@@ -9,6 +9,7 @@ def native_format(data):
     result = {
         "format": "NATIVE",
         "serial_time": 0,
+        "serial_size": 0,
         "deserial_time": 0,
     }
     return json.dumps(result)
@@ -17,6 +18,7 @@ def xml_format(data):
     result = {
         "format": "XML",
         "serial_time": 0,
+        "serial_size": 0,
         "deserial_time": 0,
     }
     return json.dumps(result)
@@ -25,6 +27,7 @@ def json_format(data):
     result = {
         "format": "JSON",
         "serial_time": 0,
+        "serial_size": 0,
         "deserial_time": 0,
     }
     return json.dumps(result)
@@ -33,6 +36,7 @@ def gpb_format(data):
     result = {
         "format": "GPB",
         "serial_time": 0,
+        "serial_size": 0,
         "deserial_time": 0,
     }
     return json.dumps(result)
@@ -41,6 +45,7 @@ def apache_format(data):
     result = {
         "format": "APACHE",
         "serial_time": 0,
+        "serial_size": 0,
         "deserial_time": 0,
     }
     return json.dumps(result)
@@ -49,6 +54,7 @@ def yaml_format(data):
     result = {
         "format": "YAML",
         "serial_time": 0,
+        "serial_size": 0,
         "deserial_time": 0,
     }
     return json.dumps(result)
@@ -57,6 +63,7 @@ def msgpack_format(data):
     result = {
         "format": "MSGPACK",
         "serial_time": 0,
+        "serial_size": 0,
         "deserial_time": 0,
     }
     return json.dumps(result)
