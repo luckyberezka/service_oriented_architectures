@@ -50,8 +50,6 @@ def single_request_processing(query_format):
     host = query_format
     port = int(os.environ['PORT'])
 
-    result_str = ""
-
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.connect((host, port))
         s.sendto(str.encode("Get {} timing".format(query_format)), (host, port))
