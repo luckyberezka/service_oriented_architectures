@@ -30,7 +30,7 @@ nc -u 0.0.0.0 2000
 get_result format
 ```
 
-Вместо format следует указывать формат запроса из списка ["NATIVE", "XML", "JSON", "GPB", "APACHE", "YAML", "MSGPACK", "["NATIVE", "XML", "JSON", "GPB", "APACHE", "YAML", "MSGPACK"]
+Вместо format следует указывать формат запроса из списка ["NATIVE", "XML", "JSON", "GPB", "APACHE", "YAML", "MSGPACK", "ALL"]
 
 # Примеры работы
 
