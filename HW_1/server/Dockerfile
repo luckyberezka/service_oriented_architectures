@@ -2,9 +2,7 @@ FROM python:3.8
 
 WORKDIR /code
 
-ADD server.py .
-
-ADD requirements.txt .
+COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 

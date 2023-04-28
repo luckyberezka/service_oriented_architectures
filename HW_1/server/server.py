@@ -9,17 +9,35 @@ import xmltodict
 import dicttoxml
 import yaml
 import msgpack
+import io
+import fastavro
+
+import extra_pb2
 
 
 TESTING_DATA = {
     "string": "Hello, world!",
-    "array": ["Hello", "From", "Kalmykia", "!"],
+    "array": [15, 8, 12, 5],
     "dictionary": {"negn": 1, "hoir": 2, "gurvn": 3, "dorvn": 4},
     "int_num": 42,
     "float_num": 3.1415,
 }
 
 CURRENT_SERIAL_TESTING_DATA = None
+
+SCHEMA_RECORD = {
+    "name": "exmpl",
+    "type": 'record',
+    "fields": [
+        {"name": "string", "type": "string"},
+        {"name": "array", "type": {"type": "array", "items": "int"}},
+        {"name": "dictionary", "type": {"type": "map", "values": "int"}},
+        {"name": "int_num", "type": "int"},
+        {"name": "float_num", "type": "float"},
+    ]
+}
+
+MSG = extra_pb2.Data()
 
 def native_format(extra):
     global TESTING_DATA
@@ -86,21 +104,70 @@ def json_format(extra):
     }
     return json.dumps(result)
 
-def gpb_format(data):
+def gpb_format(extra):
+
+    global TESTING_DATA
+    global CURRENT_SERIAL_TESTING_DATA
+    global MSG
+
+    TESTING_DATA = extra
+
+    MSG = extra_pb2.Data()
+    MSG.string = TESTING_DATA["string"]
+    MSG.int_num = TESTING_DATA["int_num"]
+    MSG.float_num = TESTING_DATA["float_num"]
+    MSG.array.extend(TESTING_DATA["array"])
+    for key in TESTING_DATA["dictionary"]:
+        MSG.dictionary[key] = TESTING_DATA["dictionary"][key]
+
+    CURRENT_SERIAL_TESTING_DATA = MSG.SerializeToString()
+
+    serial_executor = "MSG.SerializeToString()"
+    serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
+
+    deserial_executor = "MSG.ParseFromString(CURRENT_SERIAL_TESTING_DATA)"
+    deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
+
     result = {
         "format": "GPB",
-        "serial_time": 0,
-        "serial_size": 0,
-        "deserial_time": 0,
+        "serial_time": serial_time,
+        "serial_size": sys.getsizeof(CURRENT_SERIAL_TESTING_DATA),
+        "deserial_time": deserial_time,
     }
     return json.dumps(result)
 
-def apache_format(data):
+
+def apache_format(extra):
+
+    global TESTING_DATA
+    global CURRENT_SERIAL_TESTING_DATA
+
+    TESTING_DATA = extra
+
+    wb = io.BytesIO()
+    fastavro.schemaless_writer(wb, SCHEMA_RECORD, TESTING_DATA)
+    CURRENT_SERIAL_TESTING_DATA = wb.getvalue()
+
+    serial_executor = '''
+wb = io.BytesIO()
+fastavro.schemaless_writer(wb, SCHEMA_RECORD, TESTING_DATA)
+wb.getvalue()
+'''
+    serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
+
+    deserial_executor = '''
+wb = io.BytesIO()
+wb.write(CURRENT_SERIAL_TESTING_DATA)
+wb.seek(0)
+fastavro.schemaless_reader(wb, SCHEMA_RECORD)
+'''
+    deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
+
     result = {
         "format": "APACHE",
-        "serial_time": 0,
-        "serial_size": 0,
-        "deserial_time": 0,
+        "serial_time": serial_time,
+        "serial_size": sys.getsizeof(CURRENT_SERIAL_TESTING_DATA),
+        "deserial_time": deserial_time,
     }
     return json.dumps(result)
 
