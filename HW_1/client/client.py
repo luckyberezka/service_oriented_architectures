@@ -35,7 +35,7 @@ def multiple_request_processing():
             response_storage[data["format"]] = (data["serial_time"], data["serial_size"], data["deserial_time"])
             print(data)
 
-            result_part = "{}-{}-{}-{}\n".format(
+            result_part = "{} - {} - {} - {}\n".format(
                 data["format"],
                 data["serial_time"],
                 data["serial_size"],
@@ -58,7 +58,7 @@ def single_request_processing(query_format):
         data = json.loads(data.decode())
         print(data)
 
-        result_str = "{}-{}-{}-{}\n".format(
+        result_str = "{} - {} - {} - {}\n".format(
             data["format"],
             data["serial_time"],
             data["serial_size"],

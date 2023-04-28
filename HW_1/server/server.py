@@ -3,32 +3,86 @@ import socket
 import os
 import struct
 import json
+import timeit
+import sys
+import xmltodict
+import dicttoxml
+import yaml
+import msgpack
 
 
-def native_format(data):
+TESTING_DATA = {
+    "string": "Hello, world!",
+    "array": ["Hello", "From", "Kalmykia", "!"],
+    "dictionary": {"negn": 1, "hoir": 2, "gurvn": 3, "dorvn": 4},
+    "int_num": 42,
+    "float_num": 3.1415,
+}
+
+CURRENT_SERIAL_TESTING_DATA = None
+
+def native_format(extra):
+    global TESTING_DATA
+    global CURRENT_SERIAL_TESTING_DATA
+
+    TESTING_DATA = extra
+    CURRENT_SERIAL_TESTING_DATA = str(TESTING_DATA)
+
+    serial_executor = "str(TESTING_DATA)"
+    serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
+
+    deserial_executor = "eval(CURRENT_SERIAL_TESTING_DATA)"
+    deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
+
     result = {
         "format": "NATIVE",
-        "serial_time": 0,
-        "serial_size": 0,
-        "deserial_time": 0,
+        "serial_time": serial_time,
+        "serial_size": sys.getsizeof(CURRENT_SERIAL_TESTING_DATA),
+        "deserial_time": deserial_time,
     }
     return json.dumps(result)
 
-def xml_format(data):
+def xml_format(extra):
+
+    global TESTING_DATA
+    global CURRENT_SERIAL_TESTING_DATA
+
+    TESTING_DATA = extra
+    CURRENT_SERIAL_TESTING_DATA = dicttoxml.dicttoxml(TESTING_DATA)
+
+    serial_executor = "dicttoxml.dicttoxml(TESTING_DATA)"
+    serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
+
+    deserial_executor = "xmltodict.parse(CURRENT_SERIAL_TESTING_DATA)"
+    deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
+
     result = {
         "format": "XML",
-        "serial_time": 0,
-        "serial_size": 0,
-        "deserial_time": 0,
+        "serial_time": serial_time,
+        "serial_size": sys.getsizeof(CURRENT_SERIAL_TESTING_DATA),
+        "deserial_time": deserial_time,
     }
     return json.dumps(result)
 
-def json_format(data):
+def json_format(extra):
+
+    global TESTING_DATA
+    global CURRENT_SERIAL_TESTING_DATA
+
+    TESTING_DATA = extra
+    CURRENT_SERIAL_TESTING_DATA = json.dumps(TESTING_DATA)
+
+    serial_executor = "json.dumps(TESTING_DATA)"
+    serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
+
+    deserial_executor = "json.loads(CURRENT_SERIAL_TESTING_DATA)"
+    deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
+
     result = {
         "format": "JSON",
-        "serial_time": 0,
-        "serial_size": 0,
-        "deserial_time": 0,
+        "serial_time": serial_time,
+        "serial_size": sys.getsizeof(CURRENT_SERIAL_TESTING_DATA),
+        "deserial_time": deserial_time,
     }
     return json.dumps(result)
 
@@ -50,21 +104,49 @@ def apache_format(data):
     }
     return json.dumps(result)
 
-def yaml_format(data):
+def yaml_format(extra):
+
+    global TESTING_DATA
+    global CURRENT_SERIAL_TESTING_DATA
+
+    TESTING_DATA = extra
+    CURRENT_SERIAL_TESTING_DATA = yaml.dump(TESTING_DATA)
+
+    serial_executor = "yaml.dump(TESTING_DATA)"
+    serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
+
+    deserial_executor = "yaml.load(CURRENT_SERIAL_TESTING_DATA, yaml.FullLoader)"
+    deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
+
+
     result = {
         "format": "YAML",
-        "serial_time": 0,
-        "serial_size": 0,
-        "deserial_time": 0,
+        "serial_time": serial_time,
+        "serial_size": sys.getsizeof(CURRENT_SERIAL_TESTING_DATA),
+        "deserial_time": deserial_time,
     }
     return json.dumps(result)
 
-def msgpack_format(data):
+def msgpack_format(extra):
+
+    global TESTING_DATA
+    global CURRENT_SERIAL_TESTING_DATA
+
+    TESTING_DATA = extra
+    CURRENT_SERIAL_TESTING_DATA = msgpack.packb(TESTING_DATA)
+
+    serial_executor = "msgpack.packb(TESTING_DATA)"
+    serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
+
+    deserial_executor = "msgpack.unpackb(CURRENT_SERIAL_TESTING_DATA)"
+    deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
+
+
     result = {
         "format": "MSGPACK",
-        "serial_time": 0,
-        "serial_size": 0,
-        "deserial_time": 0,
+        "serial_time": serial_time,
+        "serial_size": sys.getsizeof(CURRENT_SERIAL_TESTING_DATA),
+        "deserial_time": deserial_time,
     }
     return json.dumps(result)
 
@@ -78,14 +160,6 @@ NAME_TO_METHOD = {
     "APACHE": apache_format,
     "YAML": yaml_format,
     "MSGPACK": msgpack_format,
-}
-
-TESTING_DATA = {
-    "string": "Hello, world!",
-    "array": ["Hello", "From", "Kalmykia", "!"],
-    "dictionary": {"negn": 1, "hoir": 2, "gurvn": 3, "dorvn": 4},
-    "int_num": 42,
-    "float_num": 3.1415,
 }
 
 
