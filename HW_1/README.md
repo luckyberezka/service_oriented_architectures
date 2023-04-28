@@ -13,7 +13,18 @@ docker-compose build && docker-compose up
 0.0.0.0:2000
 ```
 
+# Тестируемая структура
 
+Тестируемой структурой явлется набор различных структур из Python:
+```
+TESTING_DATA = {
+    "string": "Hello, world!",
+    "array": [15, 8, 12, 5],
+    "dictionary": {"negn": 1, "hoir": 2, "gurvn": 3, "dorvn": 4},
+    "int_num": 42,
+    "float_num": 3.1415,
+}
+```
 
 # Использование
 
