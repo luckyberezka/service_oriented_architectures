@@ -35,11 +35,11 @@ def multiple_request_processing():
             response_storage[data["format"]] = (data["serial_time"], data["serial_size"], data["deserial_time"])
             print(data)
 
-            result_part = "{} - {} - {} - {}\n".format(
+            result_part = "{} - {}ms - {} - {}ms\n".format(
                 data["format"],
-                data["serial_time"],
+                data["serial_time"] * 1000,
                 data["serial_size"],
-                data["deserial_time"]
+                data["deserial_time"] * 1000
             )
 
             result_str += result_part
@@ -58,11 +58,11 @@ def single_request_processing(query_format):
         data = json.loads(data.decode())
         print(data)
 
-        result_str = "{} - {} - {} - {}\n".format(
+        result_str = "{} - {}ms - {} - {}ms\n".format(
             data["format"],
-            data["serial_time"],
+            data["serial_time"] * 1000,
             data["serial_size"],
-            data["deserial_time"]
+            data["deserial_time"] * 1000
         )
     return result_str
 
@@ -80,9 +80,9 @@ class MyUDPHandler(socketserver.BaseRequestHandler):
 
         if len(data) < 2 or data[0] != "get_result":
             response = "Invalid command!\n"
-        elif data[1] == "all":
+        elif data[1].upper() == "ALL":
             response = multiple_request_processing()
-        elif data[1] != "all" and data[1].upper() not in FORMAT_LIST:
+        elif data[1].upper() != "ALL" and data[1].upper() not in FORMAT_LIST:
             response = "Invalid format!\n"
         else:
             response = single_request_processing(data[1].upper())
