@@ -1,2 +1,2 @@
 # service_oriented_architectures
-Service-Oriented Architectures, hw here. 
+Service-Oriented Architectures, just first hw here. 
