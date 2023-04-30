@@ -11,6 +11,7 @@ import yaml
 import msgpack
 import io
 import fastavro
+import pickle
 
 import extra_pb2
 
@@ -44,12 +45,14 @@ def native_format(extra):
     global CURRENT_SERIAL_TESTING_DATA
 
     TESTING_DATA = extra
-    CURRENT_SERIAL_TESTING_DATA = str(TESTING_DATA)
+    CURRENT_SERIAL_TESTING_DATA = pickle.dumps(TESTING_DATA)
 
-    serial_executor = "str(TESTING_DATA)"
+    serial_executor = "pickle.dumps(TESTING_DATA)"
     serial_time = timeit.timeit(stmt=serial_executor, number=1000, globals=globals())
 
-    deserial_executor = "eval(CURRENT_SERIAL_TESTING_DATA)"
+    print("pickle")
+
+    deserial_executor = "pickle.loads(CURRENT_SERIAL_TESTING_DATA)"
     deserial_time = timeit.timeit(stmt=deserial_executor, number=1000, globals=globals())
 
     result = {

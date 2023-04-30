@@ -1,7 +1,7 @@
 version: "3"
 services:
   native:
-    image: nardzhiev/servernardzhiev
+    image: nardzhiev/nar_server
     hostname: NATIVE
     expose:
       - 10000/udp
@@ -11,7 +11,7 @@ services:
       - PORT=10000
 
   xml:
-    image: nardzhiev/servernardzhiev
+    image: nardzhiev/nar_server
     hostname: XML
     expose:
       - 10000/udp
@@ -21,7 +21,7 @@ services:
       - PORT=10000
 
   json:
-    image: nardzhiev/servernardzhiev
+    image: nardzhiev/nar_server
     hostname: JSON
     expose:
       - 10000/udp
@@ -31,7 +31,7 @@ services:
       - PORT=10000
 
   gpb:
-    image: nardzhiev/servernardzhiev
+    image: nardzhiev/nar_server
     hostname: GPB
     expose:
       - 10000/udp
@@ -41,7 +41,7 @@ services:
       - PORT=10000
 
   apache:
-    image: nardzhiev/servernardzhiev
+    image: nardzhiev/nar_server
     hostname: APACHE
     expose:
       - 10000/udp
@@ -51,7 +51,7 @@ services:
       - PORT=10000
 
   yaml:
-    image: nardzhiev/servernardzhiev
+    image: nardzhiev/nar_server
     hostname: YAML
     expose:
       - 10000/udp
@@ -61,7 +61,7 @@ services:
       - PORT=10000
 
   msgpack:
-    image: nardzhiev/servernardzhiev
+    image: nardzhiev/nar_server
     hostname: MSGPACK
     expose:
       - 10000/udp
